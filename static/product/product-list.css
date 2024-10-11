@@ -1,0 +1,60 @@
+:root {
+  --primary-color: #FF6B6B;
+  --secondary-color: #4ECDC4;
+  --accent-color: #FFD93D;
+  --text-color: #2C3E50;
+  --light-bg: #F7F9FC;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+}
+.navbar {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+.navbar-brand {
+  font-weight: 700;
+  color: var(--primary-color) !important;
+}
+.nav-link {
+  color: var(--text-color) !important;
+}
+.card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color);
+}
+.btn-primary:hover {
+  background-color: #FFE74C;
+  border-color: #FFE74C;
+}
+.badge {
+  background-color: var(--yellow);
+  color: #333;
+}
+.pagination .page-link {
+  color: var(--teal);
+}
+.pagination .page-item.active .page-link {
+  background-color: var(--teal);
+  border-color: var(--teal);
+}
+.filter-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.product-details {
+  background-color: #f1f3f5;
+  border-radius: 0 0 10px 10px;
+}

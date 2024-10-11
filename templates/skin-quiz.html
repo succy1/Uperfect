@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block extra_css %}
+    <style>
+    body {
+    background-color: #F7F9FC;
+    }
+    .quiz-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    }
+    .quiz-card:hover {
+    transform: translateY(-5px);
+    }
+    .card-title {
+    color: #FF6B6B;
+    font-weight: bold;
+    }
+    .question-section {
+    border-right: 1px solid #e0e0e0;
+    }
+    .info-section {
+    background-color: #F0F8FF;
+    padding: 20px;
+    border-radius: 0 15px 15px 0;
+    }
+    .explanation {
+    font-style: italic;
+    color: #4ECDC4;
+    }
+    .btn-primary {
+    background-color: #FFD93D;
+    border-color: #FFD93D;
+    color: #2C3E50;
+    font-weight: bold;
+    padding: 10px 30px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+    background-color: #FFC107;
+    border-color: #FFC107;
+    transform: scale(1.05);
+    }
+    .form-check-input:checked {
+    background-color: #4ECDC4;
+    border-color: #4ECDC4;
+    }
+    h1 {
+    color: #FF6B6B;
+    font-weight: bold;
+    }
+    </style>
+{% endblock extra_css %}
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4 mt-2">Discover Your Skin Type</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="card mb-4 quiz-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 question-section">
+                                <h4 class="card-title">Question {{ forloop.counter }}</h4>
+                                <p class="card-text">{{ question.text }}</p>
+                                {% for answer in question.answers %}
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="q{{ forloop.parentloop.counter }}"
+                                               id="q{{ forloop.parentloop.counter }}a{{ forloop.counter }}"
+                                               value="{{ answer.skin_type }}"
+                                               required>
+                                        <label class="form-check-label"
+                                               for="q{{ forloop.parentloop.counter }}a{{ forloop.counter }}">
+                                            {{ answer.text }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6 info-section">
+                                <img src="{{ question.image_url }}"
+                                     alt="Question illustration"
+                                     class="img-fluid mb-3 rounded">
+                                <p class="explanation">{{ question.explanation }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
