@@ -27,7 +27,8 @@ urlpatterns = [
     path('register/', account_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
-    path('quiz/', account_views.skin_quiz, name='quiz')
+    path('quiz/', account_views.skin_quiz, name='quiz'),
+    path('profile/', account_views.profile, name='profile')
 ]
 
 if settings.DEBUG:

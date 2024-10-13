@@ -17,11 +17,6 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Login/Signup button click event
-document.getElementById('loginBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    alert('Login/Signup functionality will be implemented here.');
-});
 
 // Add hover effect to feature cards
 document.querySelectorAll('.card').forEach(card => {
