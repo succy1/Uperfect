@@ -52,12 +52,12 @@
         </div>
     </div>
 {% endblock content %}
+/
 {% block extra_js %}
     <script>
 document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const email = document.getElementById('forgotPasswordEmail').value;
-    // Here you would typically send an AJAX request to your backend to handle the password reset
     alert('Password reset email sent to ' + email);
     var modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
     modal.hide();

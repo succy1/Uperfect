@@ -19,16 +19,21 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts import views as account_views
+from product import views as product_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('product.urls')),
+    path('', product_views.home, name='home'),
+    path('product/', product_views.ProductListView.as_view(), name='product-list'),
     path('register/', account_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('quiz/', account_views.skin_quiz, name='quiz'),
-    path('profile/', account_views.profile, name='profile')
+    path('profile/', account_views.profile, name='profile'),
+    path('onboarding/', account_views.onboarding, name='onboarding'),
+    path('profile-completed/', product_views.profile_creation_completed, name='profile_completed'),
+    path('assign-product/<int:product_id>/', product_views.assign_product, name='assign_product'),
 ]
 
 if settings.DEBUG:

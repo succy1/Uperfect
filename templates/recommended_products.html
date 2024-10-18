@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <style>
+    :root {
+        --coral: #FF6B6B;
+        --teal: #4ECDC4;
+        --yellow: #FFD93D;
+    }
+
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .section-title {
+        color: var(--coral);
+        border-bottom: 2px solid var(--teal);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .product-type-title {
+        color: var(--teal);
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        color: var(--coral);
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: var(--teal);
+        border-color: var(--teal);
+    }
+
+    .btn-primary:hover {
+        background-color: #3dbdaf;
+        border-color: #3dbdaf;
+    }
+
+    .btn-secondary {
+        background-color: var(--yellow);
+        border-color: var(--yellow);
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background-color: #ffd01f;
+        border-color: #ffd01f;
+        color: #333;
+    }
+
+    .rating {
+        color: var(--yellow);
+        font-weight: bold;
+    }
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+    }
+      
+    .modal-header {
+    background-color: var(--teal);
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    }
+    
+    .modal-footer {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    }
+    
+    .badge {
+    margin-right: 5px;
+    }
+    </style>
+{% endblock extra_css %}
+{% comment %} {% block content %}
+    <h1>Recommended Products for Your Skincare Routine</h1>
+    {% for product_type, products in recommended_products.items %}
+        <h2>{{ product_type }}</h2>
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:30 }}</p>
+                            <p>Rating: {{ product.avg_rating|floatformat:1 }}/5</p>
+                            <a href="#" class="btn btn-primary">View Details</a>
+                            <button class="btn btn-success assign-product" data-product-id="{{ product.id }}">Assign to Me</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock content %} {% endcomment %}
+{% block content %}
+    <div class="container my-5">
+        <h1 class="text-center mb-5 section-title">Recommended Products for Your Skincare Routine</h1>
+        {% for product_type, products in recommended_products.items %}
+            <h2 class="product-type-title">{{ product_type }}</h2>
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ product.image.url }}"
+                                 class="card-img-top"
+                                 alt="{{ product.name }}">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text flex-grow-1">{{ product.description|truncatewords:30 }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="rating">
+                                        <i class="fas fa-star"></i> {{ product.avg_rating|floatformat:1 }}/5
+                                    </span>
+                                    <div class="btn-group">
+                                        <button type="button"
+                                                class="btn btn-primary view-details"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#productModal{{ product.id }}">View Details</button>
+                                        <button class="btn btn-secondary assign-product"
+                                                data-product-id="{{ product.id }}">Assign to Me</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% for product in products %}
+                <div class="modal fade"
+                     id="productModal{{ product.id }}"
+                     tabindex="-1"
+                     aria-labelledby="productModalLabel{{ product.id }}"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productModalLabel{{ product.id }}">{{ product.name }}</h5>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="{{ product.image.url }}"
+                                             class="img-fluid rounded product-image"
+                                             alt="{{ product.name }}">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p>
+                                            <strong>Brand:</strong> {{ product.brand }}
+                                        </p>
+                                        <p>
+                                            <strong>Type:</strong> {{ product.product_type }}
+                                        </p>
+                                        <p>
+                                            <strong>Price:</strong> {{ product.price }}
+                                        </p>
+                                        <p>
+                                            <strong>Description:</strong> {{ product.description }}
+                                        </p>
+                                        <p>
+                                            <strong>Ingredients:</strong> {{ product.ingredients }}
+                                        </p>
+                                        <p>
+                                            <strong>Suitable for:</strong> {{ product.suitable_skin_types.all|join:", " }}
+                                        </p>
+                                        <p>
+                                            <strong>pH:</strong> {{ product.ph }}
+                                        </p>
+                                        <p>
+                                            <strong>Frequency of use:</strong> {{ product.frequency_of_use }}
+                                        </p>
+                                        <p>
+                                            <strong>Side effects:</strong> {{ product.side_effects }}
+                                        </p>
+                                        <p>
+                                            <strong>Pros:</strong> {{ product.pros }}
+                                        </p>
+                                        <p>
+                                            <strong>Cons:</strong> {{ product.cons }}
+                                        </p>
+                                        <p>
+                                            <strong>Recommended age:</strong> {{ product.recommended_age }}
+                                        </p>
+                                        <p>
+                                            <span class="badge {% if product.is_natural_organic %}bg-success{% else %}bg-warning{% endif %}">
+                                                {% if product.is_natural_organic == None %}
+                                                    Unspecified
+                                                {% elif product.is_natural_organic == 'mix' %}
+                                                    Natural mix organic
+                                                {% elif product.is_natural_organic == 'tự nhiên' %}
+                                                    Natural
+                                                {% else %}
+                                                    Organic
+                                                {% endif %}
+                                            </span>
+                                            <span class="badge {% if product.has_fragrance %}bg-warning{% else %}bg-success{% endif %}">
+                                                {% if product.has_fragrance %}
+                                                    Has Fragrance
+                                                {% else %}
+                                                    Fragrance-Free
+                                                {% endif %}
+                                            </span>
+                                            <span class="badge {% if product.is_oil_free %}bg-info{% else %}bg-secondary{% endif %}">
+                                                {% if product.is_oil_free %}
+                                                    Oil-Free
+                                                {% else %}
+                                                    Contains Oil
+                                                {% endif %}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>Rating:</strong> {{ product.avg_rating }}/5
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+$(document).ready(function() {
+    $('.assign-product').click(function() {
+        var productId = $(this).data('product-id');
+        var button = $(this);
+        
+        $.ajax({
+            url: '/assign-product/' + productId + '/',  // Update this URL to match your URL configuration
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    button.text('Assigned').prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
+                } else if (response.status === 'info') {
+                    button.text('Already Assigned').prop('disabled', true).removeClass('btn-success').addClass('btn-secondary');
+                }
+                alert(response.message);
+            },
+            error: function() {
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+});
+
+        document.querySelectorAll('.view-details').forEach(button => {
+        button.addEventListener('click', function() {
+        const detailsDiv = this.closest('.card').querySelector('.product-details');
+        detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+        this.textContent = detailsDiv.style.display === 'none' ? 'View Details' : 'Hide Details';
+        });
+        });
+    </script>
+{% endblock extra_js %}

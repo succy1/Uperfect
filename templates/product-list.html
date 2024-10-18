@@ -122,7 +122,7 @@
              tabindex="-1"
              aria-labelledby="productModalLabel{{ product.id }}"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="productModalLabel{{ product.id }}">{{ product.name }}</h5>
@@ -133,12 +133,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <img src="{{ product.image.url }}"
                                      class="img-fluid rounded product-image"
                                      alt="{{ product.name }}">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <p>
                                     <strong>Brand:</strong> {{ product.brand }}
                                 </p>
@@ -176,11 +176,15 @@
                                     <strong>Recommended age:</strong> {{ product.recommended_age }}
                                 </p>
                                 <p>
-                                    <span class="badge {% if product.is_natural_organic %}bg-success{% else %}bg-secondary{% endif %}">
-                                        {% if product.is_natural_organic %}
-                                            Natural/Organic
+                                    <span class="badge {% if product.is_natural_organic %}bg-success{% else %}bg-warning{% endif %}">
+                                        {% if product.is_natural_organic == None %}
+                                            Unspecified
+                                        {% elif product.is_natural_organic == 'mix' %}
+                                            Natural mix organic
+                                        {% elif product.is_natural_organic == 'tự nhiên' %}
+                                            Natural
                                         {% else %}
-                                            Not Natural/Organic
+                                            Organic
                                         {% endif %}
                                     </span>
                                     <span class="badge {% if product.has_fragrance %}bg-warning{% else %}bg-success{% endif %}">
@@ -188,13 +192,6 @@
                                             Has Fragrance
                                         {% else %}
                                             Fragrance-Free
-                                        {% endif %}
-                                    </span>
-                                    <span class="badge {% if product.is_cruelty_free %}bg-success{% else %}bg-danger{% endif %}">
-                                        {% if product.is_cruelty_free %}
-                                            Cruelty-Free
-                                        {% else %}
-                                            Not Cruelty-Free
                                         {% endif %}
                                     </span>
                                     <span class="badge {% if product.is_oil_free %}bg-info{% else %}bg-secondary{% endif %}">
@@ -221,6 +218,7 @@
 {% endblock content %}
 {% block extrajs %}
     {% comment %} <script src="{% static 'product-list.js' %}"></script> {% endcomment %}
+    <script>
     document.querySelectorAll('.view-details').forEach(button => {
     button.addEventListener('click', function() {
     const detailsDiv = this.closest('.card').querySelector('.product-details');
@@ -228,4 +226,5 @@
     this.textContent = detailsDiv.style.display === 'none' ? 'View Details' : 'Hide Details';
     });
     });
+    </script>
 {% endblock extrajs %}

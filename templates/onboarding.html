@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Create Your Skincare Profile</h1>
+        {% if step == 'goals' %}
+            <h2 class="mb-3">What are your skincare goals?</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="step" value="goals">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for goal in skincare_goals %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ goal.goal }}</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="goals"
+                                               value="{{ goal.id }}"
+                                               id="goal{{ goal.id }}">
+                                        <label class="form-check-label" for="goal{{ goal.id }}">Select this goal</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Next</button>
+            </form>
+        {% elif step == 'profile' %}
+            <h2 class="mb-3">Tell us about yourself</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="step" value="profile">
+                <h3 class="mb-3">Gender</h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                    {% for gender in 'MFO' %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {% if gender == 'M' %}
+                                            Male
+                                        {% elif gender == 'F' %}
+                                            Female
+                                        {% else %}
+                                            Other
+                                        {% endif %}
+                                    </h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="gender"
+                                               value="{{ gender }}"
+                                               id="gender{{ gender }}">
+                                        <label class="form-check-label" for="gender{{ gender }}">Select this gender</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3 class="mb-3">Skin Type</h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                    {% for skin_type in skin_types %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ skin_type.name }}</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="skin_types"
+                                               value="{{ skin_type.id }}"
+                                               id="skinType{{ skin_type.id }}">
+                                        <label class="form-check-label" for="skinType{{ skin_type.id }}">Select this skin type</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3 class="mb-3">Skin Conditions</h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                    {% for condition in skin_conditions %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ condition.condition_type }}</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="skin_conditions"
+                                               value="{{ condition.id }}"
+                                               id="skinCondition{{ condition.id }}">
+                                        <label class="form-check-label" for="skinCondition{{ condition.id }}">Select this condition</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Create Profile</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"], input[type="radio"]');
+                checkbox.checked = !checkbox.checked;
+                this.classList.toggle('border-primary');
+            });
+        });
+    });
+    </script>
+{% endblock %}
