@@ -12,55 +12,11 @@
                 </div>
             </form>
             <p class="text-center mt-3">
-                <a href="#"
-                   class="text-teal"
-                   data-bs-toggle="modal"
-                   data-bs-target="#forgotPasswordModal">Forgot password?</a>
+                <a href="{% url 'password_reset' %}" class="text-teal">Forgot Password?</a>
             </p>
             <p class="text-center">
                 Don't have an account? <a href="{% url 'register' %}" class="text-teal">Register here</a>
             </p>
         </div>
     </div>
-    <!-- Forgot Password Modal -->
-    <div class="modal fade"
-         id="forgotPasswordModal"
-         tabindex="-1"
-         aria-labelledby="forgotPasswordModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-coral" id="forgotPasswordModalLabel">Forgot Password</h5>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="forgotPasswordForm">
-                        <div class="mb-3">
-                            <label for="forgotPasswordEmail" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="forgotPasswordEmail" required>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Reset Password</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content %}
-/
-{% block extra_js %}
-    <script>
-document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('forgotPasswordEmail').value;
-    alert('Password reset email sent to ' + email);
-    var modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
-    modal.hide();
-});
-    </script>
-{% endblock extra_js %}
