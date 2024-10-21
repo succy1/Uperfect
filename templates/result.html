@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block extra_css %}
+    <style>
+    .result-container {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 2rem;
+    }
+  
+    .result-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      text-align: center;
+    }
+  
+    h2 {
+      color: #FF6B6B;
+      margin-bottom: 1.5rem;
+    }
+  
+    .result-count {
+      background: #FFD93D;
+      color: #333;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+  
+    .result-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .upload-another {
+      display: inline-block;
+      background: #4ECDC4;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+  
+    .upload-another:hover {
+      background: #3dbeb6;
+      color: white;
+      text-decoration: none;
+    }
+    </style>
+{% endblock extra_css %}
+{% block content %}
+    <div class="result-container">
+        <div class="result-card">
+            <h2>Detection Results</h2>
+            <div class="result-count">{{ detected_acnes }} spotted acnes</div>
+            <img class="result-image" src="{{ image_url }}" alt="Detected acnes">
+            <div>
+                <a href="{% url 'detect_acne' %}" class="upload-another">Upload Another Image</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
