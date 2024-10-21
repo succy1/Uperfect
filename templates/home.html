@@ -11,7 +11,7 @@
                 <div class="col-lg-6">
                     <h1 class="mb-4">Your Personal Skincare Journey Starts Here</h1>
                     <p class="lead mb-4">Discover tailored skincare routines and expert advice for your unique skin</p>
-                    <a href="#" class="btn btn-primary btn-lg">Start Your Free Skin Quiz</a>
+                    <a href="{% url 'onboarding' %}" class="btn btn-primary btn-lg">Start Your Free Skin Quiz</a>
                 </div>
                 <div class="col-lg-6">
                     <img src="{% static "home/landing_3.avif" %}" alt="Skincare illustration" class="img-fluid rounded-3 shadow floating">
@@ -116,7 +116,7 @@
     <section class="py-5 bg-light">
         <div class="container text-center">
             <h2 class="section-title mb-4">Ready to Start Your Personalized Skincare Journey?</h2>
-            <a href="#" class="btn btn-primary btn-lg">Take the Free Skin Quiz</a>
+            <a href="{% url 'onboarding' %}" class="btn btn-primary btn-lg">Take the Free Skin Quiz</a>
         </div>
     </section>
 {% endblock content %}
