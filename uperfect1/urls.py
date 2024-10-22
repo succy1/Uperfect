@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from accounts import views as account_views
 from product import views as product_views
 from django.contrib.auth import views as auth_views
-from detection import views as detection_views
+# from detection import views as detection_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +35,7 @@ urlpatterns = [
     path('onboarding/', account_views.onboarding, name='onboarding'),
     path('profile-completed/', product_views.profile_creation_completed, name='profile_completed'),
     path('assign-product/<int:product_id>/', product_views.assign_product, name='assign_product'),
-    path('detection/', detection_views.detect_acne, name="detect_acne"),
+    # path('detection/', detection_views.detect_acne, name="detect_acne"),
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(template_name="password_reset.html"), 
          name='password_reset'),
