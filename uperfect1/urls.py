@@ -36,6 +36,7 @@ urlpatterns = [
     path('profile-completed/', product_views.profile_creation_completed, name='profile_completed'),
     path('assign-product/<int:product_id>/', product_views.assign_product, name='assign_product'),
     # path('detection/', detection_views.detect_acne, name="detect_acne"),
+    path('pricing/', account_views.pricing, name="pricing"),
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(template_name="password_reset.html"), 
          name='password_reset'),

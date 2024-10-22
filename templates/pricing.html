@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+    <style>
+    :root {
+        --coral: #FF6B6B;
+        --teal: #4ECDC4;
+        --yellow: #FFD93D;
+    }
+    
+    .pricing-header {
+        background: linear-gradient(135deg, var(--teal) 0%, var(--coral) 100%);
+        padding: 4rem 0;
+        color: white;
+        margin-bottom: 3rem;
+    }
+    
+    .pricing-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .pricing-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        height: 100%;
+        transition: transform 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .pricing-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .pricing-card.popular {
+        border-color: var(--teal);
+        position: relative;
+    }
+    
+    .popular-badge {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        background: var(--teal);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+    
+    .price {
+        font-size: 2.5rem;
+        color: var(--coral);
+        font-weight: bold;
+        margin: 1.5rem 0;
+    }
+    
+    .price small {
+        font-size: 1rem;
+        color: #666;
+    }
+    
+    .feature-list {
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+    
+    .feature-list li {
+        padding: 0.5rem 0;
+        color: #555;
+    }
+    
+    .feature-list li i {
+        color: var(--teal);
+        margin-right: 0.5rem;
+    }
+    
+    .btn-subscribe {
+        background: var(--coral);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .btn-subscribe:hover {
+        background: #ff5252;
+        color: white;
+    }
+    
+    .btn-subscribe.current {
+        background: var(--teal);
+        cursor: default;
+    }
+    
+    .payment-info {
+        margin-top: 4rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+    
+    .bank-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .bank-detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .bank-detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .payment-note {
+        background: var(--yellow);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1.5rem;
+    }
+    
+    .qr-container {
+        text-align: center;
+        margin: 2rem 0;
+    }
+    
+    .qr-code {
+        max-width: 200px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+    </style>
+{% endblock extra_css %}
+{% block content %}
+    <div class="pricing-header text-center">
+        <h1 class="mb-3">Choose Your Plan</h1>
+        <p class="lead">Unlock premium features to enhance your skincare journey</p>
+    </div>
+    <div class="pricing-container">
+        <div class="row g-4 mb-5">
+            {% for tier in subscription_tiers %}
+                <div class="col-md-4">
+                    <div class="pricing-card {% if tier.name == 'Premium' %}popular{% endif %}">
+                        {% if tier.name == 'Premium' %}<div class="popular-badge">Most Popular</div>{% endif %}
+                        <h3 class="text-center">{{ tier.name }}</h3>
+                        <div class="price text-center">
+                            ₫{{ tier.price|floatformat:0 }}
+                            <small>/month</small>
+                        </div>
+                        <div class="text-muted text-center mb-4">{{ tier.description }}</div>
+                        {% if current_subscription == tier %}
+                            <button class="btn btn-subscribe current" disabled>Current Plan</button>
+                        {% else %}
+                            <button class="btn btn-subscribe"
+                                    onclick="showPaymentInfo('{{ tier.name }}')">Select Plan</button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="payment-info" id="paymentInfo" style="display: none;">
+            <h3 class="text-center mb-4">Complete Your Subscription</h3>
+            <div class="bank-details">
+                <div class="bank-detail-item">
+                    <strong>Bank Name:</strong>
+                    <span>MB Bank</span>
+                </div>
+                <div class="bank-detail-item">
+                    <strong>Account Name:</strong>
+                    <span>Nguyen Dinh Long Vu</span>
+                </div>
+                <div class="bank-detail-item">
+                    <strong>Account Number:</strong>
+                    <span>9704 2292 0920 1358 033</span>
+                </div>
+            </div>
+            <div class="qr-container">
+                <img src="{% static 'pricing/qr_code.jpg' %}"
+                     alt="QR Code"
+                     class="qr-code">
+            </div>
+            <div class="payment-note">
+                <p class="mb-0">
+                    <strong>Important:</strong> Please include your username "{{ user.username }}"
+                    in the transfer description for payment verification.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script>
+    function showPaymentInfo(planName) {
+        const paymentInfo = document.getElementById('paymentInfo');
+        paymentInfo.style.display = 'block';
+        paymentInfo.scrollIntoView({ behavior: 'smooth' });
+    }
+    </script>
+{% endblock extra_js %}

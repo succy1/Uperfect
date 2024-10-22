@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegisterForm
 from .quiz import *
 from django.contrib.auth.decorators import login_required
-from .models import Profile, SkincareGoal, SkinCondition, SkinType
+from .models import Profile, SkincareGoal, SkinCondition, SkinType, SubscriptionTier
 from django.apps import apps
 from django.contrib import messages
 
@@ -85,3 +85,18 @@ def onboarding(request):
         'skin_conditions': SkinCondition.objects.all(),
     }
     return render(request, 'onboarding.html', context)
+
+@login_required
+def pricing(request):
+    subscription_tiers = SubscriptionTier.objects.all()
+    
+    # Get user's current subscription if any
+    current_subscription = None
+    if hasattr(request.user, 'profile'):
+        current_subscription = request.user.profile.subscription_tier
+
+    context = {
+        'subscription_tiers': subscription_tiers,
+        'current_subscription': current_subscription
+    }
+    return render(request, 'pricing.html', context)
