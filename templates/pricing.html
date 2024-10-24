@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block extra_css %}
     <style>
     :root {
@@ -158,7 +159,7 @@
                         {% if tier.name == 'Premium' %}<div class="popular-badge">Most Popular</div>{% endif %}
                         <h3 class="text-center">{{ tier.name }}</h3>
                         <div class="price text-center">
-                            ₫{{ tier.price|floatformat:0 }}
+                            ₫{{ tier.price| intcomma }}
                             <small>/month</small>
                         </div>
                         <div class="text-muted text-center mb-4">{{ tier.description }}</div>

@@ -2,9 +2,9 @@
 {% load static %}
 {% block content %}
     <div class="container my-5">
-        <h1 class="text-center mb-4">Create Your Skincare Profile</h1>
+        <h1 class="text-center mb-4">Tạo hồ sơ chăm sóc da của bạn</h1>
         {% if step == 'goals' %}
-            <h2 class="mb-3">What are your skincare goals?</h2>
+            <h2 class="mb-3">Mục tiêu chăm sóc da của bạn là gì?</h2>
             <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="step" value="goals">
@@ -20,21 +20,21 @@
                                                name="goals"
                                                value="{{ goal.id }}"
                                                id="goal{{ goal.id }}">
-                                        <label class="form-check-label" for="goal{{ goal.id }}">Select this goal</label>
+                                        <label class="form-check-label" for="goal{{ goal.id }}">Chọn mục này</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Next</button>
+                <button type="submit" class="btn btn-primary mt-3">Tiếp tục</button>
             </form>
         {% elif step == 'profile' %}
-            <h2 class="mb-3">Tell us about yourself</h2>
+            <h2 class="mb-3">Hãy cho chúng tôi biết về bạn</h2>
             <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="step" value="profile">
-                <h3 class="mb-3">Gender</h3>
+                <h3 class="mb-3">Giới tính</h3>
                 <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
                     {% for gender in 'MFO' %}
                         <div class="col">
@@ -42,11 +42,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         {% if gender == 'M' %}
-                                            Male
+                                            Nam
                                         {% elif gender == 'F' %}
-                                            Female
+                                            Nữ
                                         {% else %}
-                                            Other
+                                            Khác
                                         {% endif %}
                                     </h5>
                                     <div class="form-check">
@@ -55,14 +55,14 @@
                                                name="gender"
                                                value="{{ gender }}"
                                                id="gender{{ gender }}">
-                                        <label class="form-check-label" for="gender{{ gender }}">Select this gender</label>
+                                        <label class="form-check-label" for="gender{{ gender }}">Chọn ô này</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-                <h3 class="mb-3">Skin Type</h3>
+                <h3 class="mb-3">Loại da</h3>
                 <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
                     {% for skin_type in skin_types %}
                         <div class="col">
@@ -75,14 +75,14 @@
                                                name="skin_types"
                                                value="{{ skin_type.id }}"
                                                id="skinType{{ skin_type.id }}">
-                                        <label class="form-check-label" for="skinType{{ skin_type.id }}">Select this skin type</label>
+                                        <label class="form-check-label" for="skinType{{ skin_type.id }}">Chọn loại da này</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-                <h3 class="mb-3">Skin Conditions</h3>
+                <h3 class="mb-3">Tình trạng da</h3>
                 <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
                     {% for condition in skin_conditions %}
                         <div class="col">
@@ -95,14 +95,14 @@
                                                name="skin_conditions"
                                                value="{{ condition.id }}"
                                                id="skinCondition{{ condition.id }}">
-                                        <label class="form-check-label" for="skinCondition{{ condition.id }}">Select this condition</label>
+                                        <label class="form-check-label" for="skinCondition{{ condition.id }}">Chọn tình trạng này</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-primary mt-3">Create Profile</button>
+                <button type="submit" class="btn btn-primary mt-3">Đưa ra gợi ý!</button>
             </form>
         {% endif %}
     </div>

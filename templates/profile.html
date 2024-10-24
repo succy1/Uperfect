@@ -66,18 +66,51 @@
 .progress-bar {
     background-color: var(--teal);
 }
+
+  .profile-form .btn {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .profile-form .btn-primary {
+    background-color: #FF6B6B;
+    border-color: #FF6B6B;
+  }
+
+  .profile-form .btn-primary:hover {
+    background-color: #f57878;
+    border-color: #f57878;
+  }
+
+  .profile-form .btn-outline-info {
+    color: #4ECDC4;
+    border-color: #4ECDC4;
+  }
+
+  .profile-form .btn-outline-info:hover {
+    background-color: #71d1ca;
+    color: white;
+  }
+
+  .profile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
     </style>
 {% endblock extra_css %}
 {% block content %}
-    <div class="container my-5">
+    <div class="container my-4">
         <div class="profile-header mb-4">
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
                     <img src="{{ profile.profile_picture.url }}"
                          alt="Profile Picture"
                          class="rounded-circle profile-img img-fluid mb-3"
-                         style="width: 150px;
-                                height: 150px;
+                         style="width: 200px;
+                                height: 200px;
                                 object-fit: cover">
                 </div>
                 <div class="col-md-9">
@@ -92,54 +125,65 @@
             <div class="col-md-3">
                 <div class="custom-card card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">Profile Info</h5>
+                        <h5 class="card-title">Thông tin người dùng</h5>
                         <p class="mb-2">
-                            <strong>Gender:</strong>
+                            <strong>Giới tính:</strong>
                             {% if profile.gender == "M" %}
-                                Male
+                                Nam
                             {% elif profile.gender == "F" %}
-                                Female
+                                Nữ
                             {% else %}
-                                Other
+                                Khác
                             {% endif %}
                         </p>
                         <p class="mb-2">
-                            <strong>Skin type:</strong>
+                            <strong>Loại da:</strong>
                             {% for skin_type in profile.skin_types.all %}
                                 {{ skin_type.name }}
                                 {% if not forloop.last %},{% endif %}
                             {% endfor %}
                         </p>
                         <p class="mb-2">
-                            <strong>Skin type:</strong>
-                            {% for skin_type in profile.skin_types.all %}
-                                {{ skin_type.name }}
-                                {% if not forloop.last %},{% endif %}
-                            {% endfor %}
+                            <strong>Gia nhập vào:</strong> {{ profile.user.date_joined| date:"d M, Y" |default:"None" }}
                         </p>
-                        <p class="mb-2">
-                            <strong>Join date:</strong> {{ profile.user.date_joined| date:"d M, Y" |default:"None" }}
-                        </p>
+                    </div>
+                </div>
+                <div class="custom-card card mb-4">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" class="profile-form">
+                            {% csrf_token %}
+                            <div class="form-sections">
+                                {% if u_form %}<div class="form-section mb-4">{{ u_form|crispy }}</div>{% endif %}
+                                {% if p_form %}<div class="form-section mb-4">{{ p_form|crispy }}</div>{% endif %}
+                            </div>
+                            <div class="profile-buttons">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Update Profile
+                                </button>
+                                <a href="{% url 'onboarding' %}" class="btn btn-outline-info">
+                                    <i class="fas fa-redo me-2"></i>Retake Skin Quiz
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-pills mb-4" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="pill" href="#products">Products</a>
+                        <a class="nav-link active" data-bs-toggle="pill" href="#products">Sản phẩm đang sử dụng</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="pill" href="#advice">Advice</a>
+                        <a class="nav-link" data-bs-toggle="pill" href="#advice">Tip</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="pill" href="#reviews">Reviews</a>
+                        <a class="nav-link" data-bs-toggle="pill" href="#reviews">Đánh giá</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="pill" href="#progress">Progress</a>
+                        <a class="nav-link" data-bs-toggle="pill" href="#progress">Tiến trình</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <!-- Products Tab -->
                     <div id="products" class="tab-pane fade show active">
                         {% for product_type, products in user_products.items %}
                             <div class="custom-card card mb-4">
@@ -189,11 +233,11 @@
                                     <h5 class="card-title">{{ review.product.name }}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.rating }}/5</h6>
                                     <p>{{ review.comment }}</p>
-                                    <p class="text-muted">Reviewed on {{ review.created_at|date:"F d, Y" }}</p>
+                                    <p class="text-muted">Đánh giá vào {{ review.created_at|date:"F d, Y" }}</p>
                                 </div>
                             </div>
                         {% empty %}
-                            <p>No reviews yet.</p>
+                            <p>Bạn chưa đánh giá sản phẩm nào.</p>
                         {% endfor %}
                     </div>
                     <div id="advice" class="tab-pane fade">
