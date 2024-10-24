@@ -46,3 +46,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+class SkincareAdvice(models.Model):
+    skin_type = models.ForeignKey(SkinType, on_delete=models.CASCADE, related_name="advices")
+    content = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f"{self.skin_type.name} - {self.content}"

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from .quiz import *
 from django.contrib.auth.decorators import login_required
-from .models import Profile, SkincareGoal, SkinCondition, SkinType, SubscriptionTier
+from .models import *
 from django.apps import apps
 from django.contrib import messages
 
@@ -39,11 +39,30 @@ def profile(request):
             grouped_user_products[product_type] = []
         grouped_user_products[product_type].append(user_product)
 
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            return redirect("profile")
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    skin_type_idx = profile.skin_types.all().values_list("id", flat=True)
+    skincare_advice = SkincareAdvice.objects.filter(skin_type_id__in=skin_type_idx)
+
     context = {
         'profile': profile,
         'user_products': grouped_user_products,
         'user_reviews': user_reviews,
+        'u_form': u_form,
+        'p_form': p_form,
+        'skincare_advice': skincare_advice
     }
+
     return render(request, 'profile.html', context)
 
 @login_required

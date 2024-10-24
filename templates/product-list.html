@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'product/product-list.css' %}" />
 {% endblock extra_css %}
@@ -61,7 +62,7 @@
                                 <br>
                                 <strong>Type:</strong> {{ product.product_type }}
                                 <br>
-                                <strong>Price:</strong> {{ product.price }}
+                                <strong>Price:</strong> {{ product.price | intcomma }}
                             </p>
                             <button type="button"
                                     class="btn btn-primary view-details"
@@ -171,9 +172,6 @@
                                 </p>
                                 <p>
                                     <strong>Cons:</strong> {{ product.cons }}
-                                </p>
-                                <p>
-                                    <strong>Recommended age:</strong> {{ product.recommended_age }}
                                 </p>
                                 <p>
                                     <span class="badge {% if product.is_natural_organic %}bg-success{% else %}bg-warning{% endif %}">
