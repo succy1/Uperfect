@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import *
 from .quiz import *
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.apps import apps
 from django.contrib import messages
+from django.utils import timezone
+from datetime import timedelta
+import json
 
 # Create your views here.
 def register(request):
@@ -125,3 +128,74 @@ def pricing(request):
         'current_subscription': current_subscription
     }
     return render(request, 'pricing.html', context)
+
+@login_required
+def daily_checkin(request):
+    # Check if user has already checked in today
+    today = timezone.now().date()
+    existing_checkin = DailyCheckIn.objects.filter(user=request.user, date=today).first()
+    
+    if request.method == 'POST':
+        form = DailyCheckInForm(request.POST, instance=existing_checkin)
+        if form.is_valid():
+            checkin = form.save(commit=False)
+            checkin.user = request.user
+            checkin.save()
+            messages.success(request, 'Daily check-in recorded successfully!')
+            return redirect('checkin_history')
+    else:
+        form = DailyCheckInForm(instance=existing_checkin)
+    
+    return render(request, 'daily_checkin.html', {'form': form})
+
+@login_required
+def checkin_history(request):
+    # Get the last 30 days of check-ins
+    end_date = timezone.now().date()
+    start_date = end_date - timedelta(days=30)
+    
+    checkins = DailyCheckIn.objects.filter(
+        user=request.user,
+        date__range=[start_date, end_date]
+    ).order_by('date')
+    
+    # Prepare data for charts
+    chart_data = {
+        'dates': [],
+        'composite_scores': [],
+        'sleep_scores': [],
+        'stress_scores': [],
+        'skin_scores': []
+    }
+    
+    for checkin in checkins:
+        chart_data['dates'].append(checkin.date.strftime('%Y-%m-%d'))
+        chart_data['composite_scores'].append(checkin.calculate_composite_score())
+        chart_data['sleep_scores'].append(checkin.calculate_sleep_score())
+        chart_data['stress_scores'].append(checkin.calculate_stress_score())
+        chart_data['skin_scores'].append(checkin.calculate_skin_feel_score())
+    
+    # Calculate weekly averages and trends
+    weekly_stats = calculate_weekly_stats(checkins)
+    
+    context = {
+        'checkins': checkins,
+        'chart_data': json.dumps(chart_data),
+        'weekly_stats': weekly_stats
+    }
+    
+    return render(request, 'checkin_history.html', context)
+
+def calculate_weekly_stats(checkins):
+    if not checkins:
+        return {}
+        
+    weekly_stats = {
+        'blemish_percentage': sum(1 for c in checkins if c.new_blemishes) / len(checkins) * 100,
+        'avg_sleep': sum(float(c.sleep_hours) for c in checkins) / len(checkins),
+        'avg_stress': sum(c.stress_level for c in checkins) / len(checkins),
+        'skincare_consistency': sum(1 for c in checkins if c.used_skincare) / len(checkins) * 100,
+        'avg_composite_score': sum(c.calculate_composite_score() for c in checkins) / len(checkins)
+    }
+    
+    return weekly_stats
