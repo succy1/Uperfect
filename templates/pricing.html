@@ -148,8 +148,8 @@
 {% endblock extra_css %}
 {% block content %}
     <div class="pricing-header text-center">
-        <h1 class="mb-3">Choose Your Plan</h1>
-        <p class="lead">Unlock premium features to enhance your skincare journey</p>
+        <h1 class="mb-3">Chọn gói của bạn</h1>
+        <p class="lead">Mở khóa các tính năng cao cấp để nâng cao hành trình chăm sóc da của bạn</p>
     </div>
     <div class="pricing-container">
         <div class="row g-4 mb-5">
@@ -162,7 +162,7 @@
                             ₫{{ tier.price| intcomma }}
                             <small>/month</small>
                         </div>
-                        <div class="text-muted text-center mb-4">{{ tier.description }}</div>
+                        <div class="text-muted text-center mb-4">{{ tier.description | linebreaks }}</div>
                         {% if current_subscription == tier %}
                             <button class="btn btn-subscribe current" disabled>Current Plan</button>
                         {% else %}
@@ -174,18 +174,18 @@
             {% endfor %}
         </div>
         <div class="payment-info" id="paymentInfo" style="display: none;">
-            <h3 class="text-center mb-4">Complete Your Subscription</h3>
+            <h3 class="text-center mb-4">Hoàn tất đăng ký của bạn</h3>
             <div class="bank-details">
                 <div class="bank-detail-item">
-                    <strong>Bank Name:</strong>
+                    <strong>Tên Ngân hàng:</strong>
                     <span>MB Bank</span>
                 </div>
                 <div class="bank-detail-item">
-                    <strong>Account Name:</strong>
+                    <strong>Tên tài khoản:</strong>
                     <span>Nguyen Dinh Long Vu</span>
                 </div>
                 <div class="bank-detail-item">
-                    <strong>Account Number:</strong>
+                    <strong>Số tài khoản:</strong>
                     <span>9704 2292 0920 1358 033</span>
                 </div>
             </div>
@@ -196,8 +196,8 @@
             </div>
             <div class="payment-note">
                 <p class="mb-0">
-                    <strong>Important:</strong> Please include your username "{{ user.username }}"
-                    in the transfer description for payment verification.
+                    <strong>Quan trọng:</strong> Vui lòng nhập tên người dùng của bạn "{{ user.username }}"
+                    trong phần mô tả chuyển khoản để xác minh thanh toán.
                 </p>
             </div>
         </div>
