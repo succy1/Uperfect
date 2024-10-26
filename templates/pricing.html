@@ -155,8 +155,8 @@
         <div class="row g-4 mb-5">
             {% for tier in subscription_tiers %}
                 <div class="col-md-4">
-                    <div class="pricing-card {% if tier.name == 'Premium' %}popular{% endif %}">
-                        {% if tier.name == 'Premium' %}<div class="popular-badge">Most Popular</div>{% endif %}
+                    <div class="pricing-card {% if tier.name == 'Basic' %}popular{% endif %}">
+                        {% if tier.name == 'Basic' %}<div class="popular-badge">Most Popular</div>{% endif %}
                         <h3 class="text-center">{{ tier.name }}</h3>
                         <div class="price text-center">
                             ₫{{ tier.price| intcomma }}
