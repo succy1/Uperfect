@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.ProfileCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'uperfect1.urls'
@@ -143,7 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "onboarding"
 LOGIN_URL = "login"
 
 LOGOUT_REDIRECT_URL = 'home'

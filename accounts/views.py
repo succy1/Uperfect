@@ -14,7 +14,7 @@ def register(request):
             form.save()
             # username = form.cleaned_data.get('username')
             # messages.success(request, f"Tài khoản của bạn đã được tạo!")
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserRegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -67,6 +67,12 @@ def profile(request):
 
 @login_required
 def onboarding(request):
+    try:
+        if hasattr(request.user, 'profile') and request.user.profile:
+            return redirect('profile')
+    except Profile.DoesNotExist:
+        pass
+
     if request.method == 'POST':
         step = request.POST.get('step')
         
