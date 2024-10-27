@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.generic import ListView
 from .models import Product, Brand, ProductType, SkinType, UserProduct
 from django.db.models import Q
+from accounts.decorators import subscription_required
 
 # Create your views here.
 def home(request):
@@ -38,7 +39,8 @@ class ProductListView(ListView):
         context['product_types'] = ProductType.objects.all()
         context['skin_types'] = SkinType.objects.all()
         return context
-    
+
+@subscription_required()
 def find_suitable_products(user_profile):
     # Get all product types
     product_types = ProductType.objects.all()
@@ -86,6 +88,8 @@ def find_suitable_products(user_profile):
     
     return recommended_products
 
+@login_required
+@subscription_required()
 def profile_creation_completed(request):
     user_profile = request.user.profile
     recommended_products = find_suitable_products(user_profile)
@@ -93,6 +97,7 @@ def profile_creation_completed(request):
     return render(request, 'recommended_products.html', {'recommended_products': recommended_products})
 
 @login_required
+@subscription_required()
 def assign_product(request, product_id):
     if request.method == 'POST':
         product = get_object_or_404(Product, id=product_id)
