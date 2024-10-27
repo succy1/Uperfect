@@ -8,8 +8,8 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 import json
+from .decorators import subscription_required
 
-# Create your views here.
 def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
@@ -26,6 +26,7 @@ def skin_quiz(request):
     return render(request, 'skin-quiz.html', {'questions': SKIN_QUIZ})
 
 @login_required
+@subscription_required()
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
 
@@ -100,6 +101,7 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 @login_required
+@subscription_required()
 def onboarding(request):
     try:
         if hasattr(request.user, 'profile') and request.user.profile:
@@ -145,7 +147,6 @@ def onboarding(request):
     }
     return render(request, 'onboarding.html', context)
 
-@login_required
 def pricing(request):
     subscription_tiers = SubscriptionTier.objects.all()
     
@@ -161,6 +162,7 @@ def pricing(request):
     return render(request, 'pricing.html', context)
 
 @login_required
+@subscription_required()
 def daily_checkin(request):
     # Check if user has already checked in today
     today = timezone.now().date()
