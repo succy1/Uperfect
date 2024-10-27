@@ -62,13 +62,21 @@ def find_suitable_products(user_profile):
         condition_goal_keywords = list(user_skin_conditions.values_list('condition_type', flat=True)) + \
                                   list(user_skincare_goals.values_list('goal', flat=True))
         
-        condition_goal_query = Q()
+        positive_query = Q()
         for keyword in condition_goal_keywords:
-            condition_goal_query |= Q(description__icontains=keyword) | \
-                                    Q(pros__icontains=keyword) | \
-                                    Q(cons__icontains=keyword)
+            positive_query |= (
+                Q(description__icontains=keyword) |
+                Q(pros__icontains=keyword)
+            )
+
+        negative_query = Q()
+        for keyword in condition_goal_keywords:
+            negative_query |= (
+                Q(cons__icontains=keyword) |
+                Q(side_effects__icontains=keyword)
+            )
         
-        suitable_products = suitable_products.filter(condition_goal_query)
+        suitable_products = suitable_products.filter(positive_query).exclude(negative_query)
         
         # Get top 5 products based on average rating
         top_products = suitable_products.order_by('-avg_rating')[:5]

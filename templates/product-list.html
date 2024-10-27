@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'product/product-list.css' %}" />
 {% endblock extra_css %}
@@ -10,7 +11,7 @@
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <select class="form-select" name="brand">
-                            <option value="">Brand</option>
+                            <option value="">Thương hiệu</option>
                             {% for brand in brands %}
                                 <option value="{{ brand.id }}"
                                         {% if brand.id|stringformat:"s" == request.GET.brand %}selected{% endif %}>
@@ -21,7 +22,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <select class="form-select" name="product_type">
-                            <option value="">Product Type</option>
+                            <option value="">Loại sản phẩm</option>
                             {% for type in product_types %}
                                 <option value="{{ type.id }}"
                                         {% if type.id|stringformat:"s" == request.GET.product_type %}selected{% endif %}>
@@ -32,7 +33,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <select class="form-select" name="skin_type">
-                            <option value="">Skin Type</option>
+                            <option value="">Loại da</option>
                             {% for skin_type in skin_types %}
                                 <option value="{{ skin_type.id }}"
                                         {% if skin_type.id|stringformat:"s" == request.GET.skin_type %}selected{% endif %}>
@@ -42,7 +43,7 @@
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <button type="submit" class="btn btn-primary w-100">Lọc kết quả</button>
                     </div>
                 </div>
             </form>
@@ -57,22 +58,22 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">
-                                <strong>Brand:</strong> {{ product.brand }}
+                                <strong>Thương hiệu:</strong> {{ product.brand }}
                                 <br>
-                                <strong>Type:</strong> {{ product.product_type }}
+                                <strong>Loại sản phẩm:</strong> {{ product.product_type }}
                                 <br>
-                                <strong>Price:</strong> {{ product.price }}
+                                <strong>Giá:</strong> ₫{{ product.price | intcomma }}
                             </p>
                             <button type="button"
                                     class="btn btn-primary view-details"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#productModal{{ product.id }}">View Details</button>
+                                    data-bs-target="#productModal{{ product.id }}">Xem chi tiết</button>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <p>No products found.</p>
+                    <p>Không tìm thấy sản phẩm.</p>
                 </div>
             {% endfor %}
         </div>
@@ -122,7 +123,7 @@
              tabindex="-1"
              aria-labelledby="productModalLabel{{ product.id }}"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="productModalLabel{{ product.id }}">{{ product.name }}</h5>
@@ -140,76 +141,73 @@
                             </div>
                             <div class="col-md-8">
                                 <p>
-                                    <strong>Brand:</strong> {{ product.brand }}
+                                    <strong>Thương hiệu:</strong> {{ product.brand }}
                                 </p>
                                 <p>
-                                    <strong>Type:</strong> {{ product.product_type }}
+                                    <strong>Loại sản phẩm:</strong> {{ product.product_type }}
                                 </p>
                                 <p>
-                                    <strong>Price:</strong> {{ product.price }}
+                                    <strong>Giá:</strong> {{ product.price }}
                                 </p>
                                 <p>
-                                    <strong>Description:</strong> {{ product.description }}
+                                    <strong>Mô tả:</strong> {{ product.description }}
                                 </p>
                                 <p>
-                                    <strong>Ingredients:</strong> {{ product.ingredients }}
+                                    <strong>Nguyên liệu:</strong> {{ product.ingredients }}
                                 </p>
                                 <p>
-                                    <strong>Suitable for:</strong> {{ product.suitable_skin_types.all|join:", " }}
+                                    <strong>Phù hợp với:</strong> {{ product.suitable_skin_types.all|join:", " }}
                                 </p>
                                 <p>
                                     <strong>pH:</strong> {{ product.ph }}
                                 </p>
                                 <p>
-                                    <strong>Frequency of use:</strong> {{ product.frequency_of_use }}
+                                    <strong>Tần suất sử dụng:</strong> {{ product.frequency_of_use }}
                                 </p>
                                 <p>
-                                    <strong>Side effects:</strong> {{ product.side_effects }}
+                                    <strong>Tác dụng phụ:</strong> {{ product.side_effects }}
                                 </p>
                                 <p>
-                                    <strong>Pros:</strong> {{ product.pros }}
+                                    <strong>Ưu điểm:</strong> {{ product.pros }}
                                 </p>
                                 <p>
-                                    <strong>Cons:</strong> {{ product.cons }}
-                                </p>
-                                <p>
-                                    <strong>Recommended age:</strong> {{ product.recommended_age }}
+                                    <strong>Nhược điểm:</strong> {{ product.cons }}
                                 </p>
                                 <p>
                                     <span class="badge {% if product.is_natural_organic %}bg-success{% else %}bg-warning{% endif %}">
                                         {% if product.is_natural_organic == None %}
-                                            Unspecified
+                                            Không xác định
                                         {% elif product.is_natural_organic == 'mix' %}
-                                            Natural mix organic
+                                            Hỗn hợp hữu cơ tự nhiên
                                         {% elif product.is_natural_organic == 'tự nhiên' %}
-                                            Natural
+                                            Tự nhiên
                                         {% else %}
-                                            Organic
+                                            Hữu cơ
                                         {% endif %}
                                     </span>
                                     <span class="badge {% if product.has_fragrance %}bg-warning{% else %}bg-success{% endif %}">
                                         {% if product.has_fragrance %}
-                                            Has Fragrance
+                                            Có hương liệu
                                         {% else %}
-                                            Fragrance-Free
+                                            Không hương liệu
                                         {% endif %}
                                     </span>
                                     <span class="badge {% if product.is_oil_free %}bg-info{% else %}bg-secondary{% endif %}">
                                         {% if product.is_oil_free %}
-                                            Oil-Free
+                                            Không chứa dầu
                                         {% else %}
-                                            Contains Oil
+                                            Chứa dầu
                                         {% endif %}
                                     </span>
                                 </p>
                                 <p>
-                                    <strong>Rating:</strong> {{ product.avg_rating }}/5
+                                    <strong>Đánh giá:</strong> {{ product.avg_rating }}/5
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>

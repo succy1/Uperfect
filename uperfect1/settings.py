@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ.get("DEBUG_VALUE") == "True")
 
 ALLOWED_HOSTS = ["uperfect-3759c926f7a6.herokuapp.com", "127.0.0.1"]
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'storages'
 ]
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.ProfileCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'uperfect1.urls'
@@ -142,7 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_ALLOWED_TEMPLATE_PACKs = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "profile"
 LOGIN_URL = "login"
 
 LOGOUT_REDIRECT_URL = 'home'

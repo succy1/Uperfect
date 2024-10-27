@@ -9,9 +9,11 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <h1 class="mb-4">Your Personal Skincare Journey Starts Here</h1>
-                    <p class="lead mb-4">Discover tailored skincare routines and expert advice for your unique skin</p>
-                    <a href="#" class="btn btn-primary btn-lg">Start Your Free Skin Quiz</a>
+                    <h1 class="mb-4">Hành trình chăm sóc da của bạn bắt đầu từ đây</h1>
+                    <p class="lead mb-4">
+                        Khám phá các quy trình chăm sóc da phù hợp và lời khuyên của chuyên gia dành cho làn da độc đáo của bạn
+                    </p>
+                    <a href="{% url 'onboarding' %}" class="btn btn-primary btn-lg">Bắt đầu bài kiểm tra da của bạn</a>
                 </div>
                 <div class="col-lg-6">
                     <img src="{% static "home/landing_3.avif" %}" alt="Skincare illustration" class="img-fluid rounded-3 shadow floating">
@@ -22,27 +24,27 @@
     <!-- Features Section -->
     <section id="features" class="py-5 bg-pattern">
         <div class="container">
-            <h2 class="text-center section-title mb-5">Why Choose Uperfect?</h2>
+            <h2 class="text-center section-title mb-5">Tại sao nên chọn Uperfect?</h2>
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
                         <i class="fas fa-fingerprint feature-icon"></i>
-                        <h3>Personalized Approach</h3>
-                        <p>Tailored skincare recommendations based on your unique skin profile</p>
+                        <h3>Cách tiếp cận cá nhân hóa</h3>
+                        <p>Khuyến nghị chăm sóc da phù hợp dựa trên cấu trúc da riêng biệt của bạn</p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
                         <i class="fas fa-calendar-check feature-icon"></i>
-                        <h3>Custom Routines</h3>
-                        <p>Step-by-step skincare routines designed for your specific needs</p>
+                        <h3>Quy trình tùy chỉnh</h3>
+                        <p>Các bước chăm sóc da được thiết kế riêng cho nhu cầu cụ thể của bạn</p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
                         <i class="fas fa-chart-line feature-icon"></i>
-                        <h3>Track Your Progress</h3>
-                        <p>Monitor your skin's improvement with our advanced tracking tools</p>
+                        <h3>Theo dõi tiến trình của bạn</h3>
+                        <p>Theo dõi sự cải thiện của làn da bạn bằng các công cụ theo dõi tiên tiến</p>
                     </div>
                 </div>
             </div>
@@ -51,29 +53,29 @@
     <!-- How It Works Section -->
     <section id="how-it-works" class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center section-title mb-5">How It Works</h2>
+            <h2 class="text-center section-title mb-5">Uperfect hoạt động như thế nào?</h2>
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body text-center">
-                            <h4 class="card-title">1. Take the Skin Quiz</h4>
-                            <p class="card-text">Answer a few questions about your skin type and concerns</p>
+                            <h4 class="card-title">1. Làm bài kiểm tra về da</h4>
+                            <p class="card-text">Trả lời một vài câu hỏi về loại da và mối quan tâm của bạn</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body text-center">
-                            <h4 class="card-title">2. Get Personalized Recommendations</h4>
-                            <p class="card-text">Receive tailored skincare routines and product suggestions</p>
+                            <h4 class="card-title">2. Nhận các đề xuất được cá nhân hóa</h4>
+                            <p class="card-text">Nhận các quy trình chăm sóc da phù hợp và gợi ý sản phẩm</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body text-center">
-                            <h4 class="card-title">3. Track Your Progress</h4>
-                            <p class="card-text">Monitor your skin's improvement and adjust your routine</p>
+                            <h4 class="card-title">3. Theo dõi tiến trình của bạn</h4>
+                            <p class="card-text">Theo dõi sự cải thiện của làn da và điều chỉnh thói quen của bạn</p>
                         </div>
                     </div>
                 </div>
@@ -83,30 +85,30 @@
     <!-- Testimonials Section -->
     <section id="testimonials" class="py-5 bg-pattern">
         <div class="container">
-            <h2 class="text-center section-title mb-5">What Our Users Say</h2>
+            <h2 class="text-center section-title mb-5">Người dùng của chúng tôi nói gì</h2>
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
-                        <img src="" alt="User 1" class="testimonial-img mx-auto">
+                        <img src="{% static "home/istockphoto-1415537841-612x612.jpg" %}" alt="User 1" class="testimonial-img mx-auto">
                         <h5>Sarah J.</h5>
                         <p class="text-muted mb-3">Graphic Designer</p>
-                        <p>"Uperfect has completely transformed my skincare routine. My skin has never looked better!"</p>
+                        <p>"Uperfect đã thay đổi hoàn toàn quy trình chăm sóc da của tôi. Da tôi chưa bao giờ đẹp đến thế!"</p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
-                        <img src="" alt="User 2" class="testimonial-img mx-auto">
+                        <img src="{% static "home/DSCF7626.jpg" %}" alt="User 2" class="testimonial-img mx-auto">
                         <h5>Mike T.</h5>
                         <p class="text-muted mb-3">Software Engineer</p>
-                        <p>"I love how personalized everything is. It's like having a skincare expert in my pocket."</p>
+                        <p>"Tôi thích cách mọi thứ được cá nhân hóa. Giống như có một chuyên gia chăm sóc da trong túi vậy."</p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center p-4">
-                        <img src="" alt="User 3" class="testimonial-img mx-auto">
+                        <img src="{% static "home/teach.avif" %}" alt="User 3" class="testimonial-img mx-auto">
                         <h5>Emma L.</h5>
                         <p class="text-muted mb-3">Teacher</p>
-                        <p>"The progress tracking feature keeps me motivated. I can actually see my skin improving!"</p>
+                        <p>"Tính năng theo dõi tiến trình giúp tôi có động lực. Tôi thực sự có thể thấy làn da của mình được cải thiện!"</p>
                     </div>
                 </div>
             </div>
@@ -115,8 +117,8 @@
     <!-- Call to Action -->
     <section class="py-5 bg-light">
         <div class="container text-center">
-            <h2 class="section-title mb-4">Ready to Start Your Personalized Skincare Journey?</h2>
-            <a href="#" class="btn btn-primary btn-lg">Take the Free Skin Quiz</a>
+            <h2 class="section-title mb-4">Bạn đã sẵn sàng bắt đầu hành trình chăm sóc da cá nhân chưa?</h2>
+            <a href="{% url 'onboarding' %}" class="btn btn-primary btn-lg">Làm bài kiểm tra da miễn phí</a>
         </div>
     </section>
 {% endblock content %}
