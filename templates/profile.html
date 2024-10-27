@@ -141,6 +141,26 @@
                             {% for skin_type in profile.skin_types.all %}
                                 {{ skin_type.name }}
                                 {% if not forloop.last %},{% endif %}
+                            {% empty %}
+                                Chưa xác định loại da
+                            {% endfor %}
+                        </p>
+                        <p class="mb-2">
+                            <strong>Tình trạng da:</strong>
+                            {% for condition in profile.skin_conditions.all %}
+                                {{ condition.condition_type }}
+                                {% if not forloop.last %},{% endif %}
+                            {% empty %}
+                                Chưa xác định tình trạng da
+                            {% endfor %}
+                        </p>
+                        <p class="mb-2">
+                            <strong>Mục tiêu skincare:</strong>
+                            {% for goal in profile.skincare_goals.all %}
+                                {{ goal.goal }}
+                                {% if not forloop.last %},{% endif %}
+                            {% empty %}
+                                Chưa xác định mục tiêu
                             {% endfor %}
                         </p>
                         <p class="mb-2">
@@ -220,6 +240,14 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                        {% empty %}
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Bắt đầu sử dụng sản phẩm</h5>
+                                    <p class="card-text">Hãy tìm ra những sản phẩm phù hợp với bạn nào!</p>
+                                    <a href="{% url 'profile_completed' %}" class="btn btn-primary">Gợi ý sản phẩm</a>
+                                </div>
+                            </div>
                         {% endfor %}
                     </div>
                     <div class="tab-pane fade"
@@ -241,21 +269,31 @@
                         {% endfor %}
                     </div>
                     <div id="advice" class="tab-pane fade">
-                        {% for skin_type in profile.skin_types.all %}
-                            <div class="custom-card card mb-4">
-                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">{{ skin_type.name }}</h5>
-                                    <span class="custom-badge">{{ skin_type.advices.count }} Tips</span>
-                                </div>
-                                <div class="card-body">
-                                    {% for advice in skin_type.advices.all %}
-                                        <div class="advice-card p-3 mb-3">
-                                            <p class="mb-0">{{ advice.content }}</p>
-                                        </div>
-                                    {% endfor %}
+                        {% if not profile.subscription_tier.name %}
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Lời khuyên</h5>
+                                    <p class="card-text">Hãy đăng ký gói để nhận được những lời khuyên thích hợp cho làn da của bạn</p>
+                                    <a href="{% url 'pricing' %}" class="btn btn-primary">Đăng ký gói</a>
                                 </div>
                             </div>
-                        {% endfor %}
+                        {% else %}
+                            {% for skin_type in profile.skin_types.all %}
+                                <div class="custom-card card mb-4">
+                                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">{{ skin_type.name }}</h5>
+                                        <span class="custom-badge">{{ skin_type.advices.count }} Tips</span>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for advice in skin_type.advices.all %}
+                                            <div class="advice-card p-3 mb-3">
+                                                <p class="mb-0">{{ advice.content }}</p>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <div id="progress"
                          class="tab-pane fade"
@@ -320,7 +358,7 @@
                                     </div>
                                 </div>
                                 <!-- Existing content -->
-                                <div class="card mb-3">
+                                {% comment %} <div class="card mb-3">
                                     <div class="card-body">
                                         <h5 class="card-title">Skin Conditions</h5>
                                         <ul class="list-unstyled">
@@ -343,13 +381,13 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
                             {% else %}
                                 <div class="card">
                                     <div class="card-body text-center">
-                                        <h5 class="card-title">Start Tracking Your Progress</h5>
-                                        <p class="card-text">Complete your first daily check-in to see your skincare progress!</p>
-                                        <a href="{% url 'daily_checkin' %}" class="btn btn-primary">Start Daily Check-in</a>
+                                        <h5 class="card-title">Bắt đầu theo dõi tiến trình của bạn</h5>
+                                        <p class="card-text">Hãy hoàn thành lần kiểm tra hàng ngày đầu tiên để xem tiến trình chăm sóc da của bạn!</p>
+                                        <a href="{% url 'daily_checkin' %}" class="btn btn-primary">Bắt đầu check-in hàng ngày</a>
                                     </div>
                                 </div>
                             {% endif %}

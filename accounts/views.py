@@ -26,7 +26,6 @@ def skin_quiz(request):
     return render(request, 'skin-quiz.html', {'questions': SKIN_QUIZ})
 
 @login_required
-@subscription_required()
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
 
@@ -101,7 +100,6 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 @login_required
-@subscription_required()
 def onboarding(request):
     try:
         if hasattr(request.user, 'profile') and request.user.profile:
@@ -130,7 +128,7 @@ def onboarding(request):
             profile.save()
             
             messages.success(request, 'Profile created successfully!')
-            return redirect('profile_completed')
+            return redirect('profile')
     
     else:
         # Check if goals have been selected
