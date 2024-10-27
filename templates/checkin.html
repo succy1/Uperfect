@@ -1,0 +1,222 @@
+{% extends "base-nonav.html" %}
+{% load static %}
+{% block extra_css %}
+    <style>
+    :root {
+      --coral: #FF6B6B;
+      --teal: #4ECDC4;
+      --yellow: #FFD93D;
+    }
+    
+    .checkin-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 800px;
+    }
+  
+    .section-title {
+      color: var(--coral);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+  
+    .form-group {
+      margin-bottom: 2rem;
+    }
+  
+    .form-label {
+      color: #2c3e50;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+    }
+  
+    .custom-radio {
+      padding: 0.8rem 1.5rem;
+      margin: 0.5rem;
+      border: 2px solid #eee;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+  
+    .custom-radio:hover {
+      border-color: var(--teal);
+    }
+  
+    .custom-radio input[type="radio"]:checked + label {
+      background-color: var(--teal);
+      color: white;
+    }
+  
+    .slider-container {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 10px;
+    }
+  
+    .submit-btn {
+      background-color: var(--coral);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 200px;
+    }
+  
+    .submit-btn:hover {
+      background-color: #ff5252;
+      transform: translateY(-2px);
+    }
+  
+    .progress-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+  
+    .progress-step {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      position: relative;
+      z-index: 1;
+    }
+  
+    .progress-step.active {
+      background-color: var(--yellow);
+      color: #2c3e50;
+    }
+  
+    .progress-line {
+      position: absolute;
+      top: 17px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #eee;
+      z-index: 0;
+    }
+    </style>
+{% endblock extra_css %}
+{% block content %}
+    <div class="container py-5">
+        <div class="checkin-card">
+            <div class="text-center mb-4">
+                <h1 class="section-title">Daily Skin Check-in</h1>
+                <p class="text-muted">Track your skin's journey and build better habits</p>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-line"></div>
+                <div class="progress-step active">1</div>
+                <div class="progress-step">2</div>
+                <div class="progress-step">3</div>
+                <div class="progress-step">4</div>
+            </div>
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        {% if field.name == 'sleep_hours' %}
+                            <div class="slider-container">
+                                {{ field }}
+                                <div class="text-muted mt-2">Hours of sleep</div>
+                            </div>
+                        {% elif field.name == 'stress_level' %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for radio in field %}
+                                    <div class="custom-radio">
+                                        {{ radio.tag }}
+                                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for radio in field %}
+                                    <div class="custom-radio">
+                                        {{ radio.tag }}
+                                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if field.errors %}<div class="invalid-feedback d-block">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+                <div class="text-center mt-4">
+                    <button type="submit" class="submit-btn">Save Check-in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add active class to radio buttons when selected
+      const radioButtons = document.querySelectorAll('.custom-radio input[type="radio"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          // Remove active class from all siblings
+          const container = this.closest('.d-flex');
+          container.querySelectorAll('.custom-radio').forEach(el => {
+            el.classList.remove('active');
+          });
+          // Add active class to selected
+          this.closest('.custom-radio').classList.add('active');
+        });
+      });
+    
+      // Form validation
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      });
+    
+      // Update progress steps as user fills form
+      const formGroups = document.querySelectorAll('.form-group');
+      const progressSteps = document.querySelectorAll('.progress-step');
+      
+      function updateProgress() {
+        let completed = 0;
+        formGroups.forEach(group => {
+          const inputs = group.querySelectorAll('input');
+          inputs.forEach(input => {
+            if (input.checked || (input.type === 'number' && input.value)) {
+              completed++;
+            }
+          });
+        });
+        
+        const progress = Math.min(Math.floor((completed / formGroups.length) * 4), 4);
+        progressSteps.forEach((step, index) => {
+          if (index < progress) {
+            step.classList.add('active');
+          } else {
+            step.classList.remove('active');
+          }
+        });
+      }
+    
+      form.addEventListener('change', updateProgress);
+    });
+    </script>
+{% endblock extra_js %}

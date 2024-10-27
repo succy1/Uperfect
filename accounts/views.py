@@ -57,13 +57,44 @@ def profile(request):
     skin_type_idx = profile.skin_types.all().values_list("id", flat=True)
     skincare_advice = SkincareAdvice.objects.filter(skin_type_id__in=skin_type_idx)
 
+    end_date = timezone.now().date()
+    start_date = end_date - timedelta(days=30)
+    
+    checkins = DailyCheckIn.objects.filter(
+        user=request.user,
+        date__range=[start_date, end_date]
+    ).order_by('date')
+    
+    # Prepare data for charts
+    chart_data = {
+        'dates': [checkin.date.strftime('%Y-%m-%d') for checkin in checkins],
+        'composite_scores': [checkin.calculate_composite_score() for checkin in checkins],
+        'sleep_scores': [checkin.calculate_sleep_score() for checkin in checkins],
+        'stress_scores': [checkin.calculate_stress_score() for checkin in checkins],
+        'skin_scores': [checkin.calculate_skin_feel_score() for checkin in checkins]
+    }
+    
+    # Calculate weekly stats
+    weekly_stats = {}
+    if checkins:
+        weekly_stats = {
+            'blemish_percentage': sum(1 for c in checkins if c.new_blemishes) / len(checkins) * 100,
+            'avg_sleep': sum(float(c.sleep_hours) for c in checkins) / len(checkins),
+            'avg_stress': sum(c.stress_level for c in checkins) / len(checkins),
+            'skincare_consistency': sum(1 for c in checkins if c.used_skincare) / len(checkins) * 100,
+            'avg_composite_score': sum(c.calculate_composite_score() for c in checkins) / len(checkins)
+        }
+
     context = {
         'profile': profile,
         'user_products': grouped_user_products,
         'user_reviews': user_reviews,
         'u_form': u_form,
         'p_form': p_form,
-        'skincare_advice': skincare_advice
+        'skincare_advice': skincare_advice,
+        'chart_data': json.dumps(chart_data),
+        'weekly_stats': weekly_stats,
+        'has_checkins': bool(checkins)
     }
 
     return render(request, 'profile.html', context)
@@ -142,60 +173,8 @@ def daily_checkin(request):
             checkin.user = request.user
             checkin.save()
             messages.success(request, 'Daily check-in recorded successfully!')
-            return redirect('checkin_history')
+            return redirect('profile')
     else:
         form = DailyCheckInForm(instance=existing_checkin)
     
-    return render(request, 'daily_checkin.html', {'form': form})
-
-@login_required
-def checkin_history(request):
-    # Get the last 30 days of check-ins
-    end_date = timezone.now().date()
-    start_date = end_date - timedelta(days=30)
-    
-    checkins = DailyCheckIn.objects.filter(
-        user=request.user,
-        date__range=[start_date, end_date]
-    ).order_by('date')
-    
-    # Prepare data for charts
-    chart_data = {
-        'dates': [],
-        'composite_scores': [],
-        'sleep_scores': [],
-        'stress_scores': [],
-        'skin_scores': []
-    }
-    
-    for checkin in checkins:
-        chart_data['dates'].append(checkin.date.strftime('%Y-%m-%d'))
-        chart_data['composite_scores'].append(checkin.calculate_composite_score())
-        chart_data['sleep_scores'].append(checkin.calculate_sleep_score())
-        chart_data['stress_scores'].append(checkin.calculate_stress_score())
-        chart_data['skin_scores'].append(checkin.calculate_skin_feel_score())
-    
-    # Calculate weekly averages and trends
-    weekly_stats = calculate_weekly_stats(checkins)
-    
-    context = {
-        'checkins': checkins,
-        'chart_data': json.dumps(chart_data),
-        'weekly_stats': weekly_stats
-    }
-    
-    return render(request, 'checkin_history.html', context)
-
-def calculate_weekly_stats(checkins):
-    if not checkins:
-        return {}
-        
-    weekly_stats = {
-        'blemish_percentage': sum(1 for c in checkins if c.new_blemishes) / len(checkins) * 100,
-        'avg_sleep': sum(float(c.sleep_hours) for c in checkins) / len(checkins),
-        'avg_stress': sum(c.stress_level for c in checkins) / len(checkins),
-        'skincare_consistency': sum(1 for c in checkins if c.used_skincare) / len(checkins) * 100,
-        'avg_composite_score': sum(c.calculate_composite_score() for c in checkins) / len(checkins)
-    }
-    
-    return weekly_stats
+    return render(request, 'checkin.html', {'form': form})
