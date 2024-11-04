@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 class SkinType(models.Model):
     name = models.CharField(max_length=50)
@@ -76,7 +77,7 @@ class DailyCheckIn(models.Model):
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=timezone.now)
     skin_feel = models.CharField(max_length=10, choices=SKIN_FEEL_CHOICES)
     new_blemishes = models.BooleanField()
     sleep_hours = models.DecimalField(

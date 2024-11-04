@@ -101,11 +101,11 @@ def profile(request):
 
 @login_required
 def onboarding(request):
-    try:
-        if hasattr(request.user, 'profile') and request.user.profile:
-            return redirect('profile')
-    except Profile.DoesNotExist:
-        pass
+    # try:
+    #     if hasattr(request.user, 'profile') and request.user.profile:
+    #         return redirect('profile')
+    # except Profile.DoesNotExist:
+    #     pass
 
     if request.method == 'POST':
         step = request.POST.get('step')
