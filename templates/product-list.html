@@ -68,6 +68,7 @@
                                     class="btn btn-primary view-details"
                                     data-bs-toggle="modal"
                                     data-bs-target="#productModal{{ product.id }}">Xem chi tiết</button>
+                            <a href="{{ product.product_url }}" class="btn btn-success">Mua sản phẩm</a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +148,7 @@
                                     <strong>Loại sản phẩm:</strong> {{ product.product_type }}
                                 </p>
                                 <p>
-                                    <strong>Giá:</strong> {{ product.price }}
+                                    <strong>Giá:</strong> ₫{{ product.price | intcomma }}
                                 </p>
                                 <p>
                                     <strong>Mô tả:</strong> {{ product.description }}
